@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Blog Platform (Next.js + MDX + Prisma)
 
-## Getting Started
+Plataforma de blogs moderna con editor MDX en vivo, API CRUD, Prisma y PostgreSQL.
 
-First, run the development server:
+### Stack
+- Next.js 16 (App Router) + Tailwind 4
+- MDX render y previsualización (remark/rehype + `@mdx-js/mdx`)
+- Prisma ORM + PostgreSQL
+- API routes para posts y etiquetas
+- Pruebas unitarias con Vitest
 
+### Configuración rápida
+1) Instala dependencias
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Crea tu `.env` a partir del ejemplo y ajusta la URL de base de datos
+```bash
+cp .env.example .env
+# DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/blog_platform?schema=public"
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3) Genera Prisma Client y aplica el esquema a tu base
+```bash
+npm run prisma:generate
+npm run prisma:migrate -- --name init   # o usa npm run db:push para entornos locales rápidos
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4) Carga datos de demo (posts MDX + etiquetas)
+```bash
+npm run prisma:seed
+```
 
-## Learn More
+5) Arranca el servidor de desarrollo
+```bash
+npm run dev
+# abre http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Flujos clave
+- `GET /api/posts?tag=mdx&includeDrafts=true` — listar posts (opcionalmente por tag o incluyendo borradores).
+- `POST /api/posts` — crear (payload: `title`, `content`, `tags`, `excerpt?`, `slug?`, `published?`).
+- `GET /api/posts/:slug` — detalle.
+- `PUT /api/posts/:slug` — actualizar.
+- `DELETE /api/posts/:slug` — eliminar.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Editor MDX
+- Página `/editor` incluye formulario con vista previa en vivo.
+- Guarda usando el endpoint `/api/posts` y persiste en PostgreSQL.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Scripts útiles
+- `npm run lint` — ESLint.
+- `npm run test` — Vitest (ej. utilidades).
+- `npm run prisma:migrate` — crear migración (requiere base de datos disponible).
+- `npm run prisma:seed` — datos de ejemplo.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Siguientes pasos
+- Conecta tu proveedor de autenticación en `src/lib/auth.ts` (placeholders listos).
+- Añade políticas de autorización en las rutas de API.
+- Personaliza estilos/temas según tu marca.

@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05060b;
+  --surface: rgba(13, 17, 28, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #f59e0b;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+}
+
+.mdx-body {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #f8fafc;
+}
+
+.mdx-body h1,
+.mdx-body h2,
+.mdx-body h3,
+.mdx-body h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+
+.mdx-body h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.mdx-body h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.mdx-body h3 {
+  font-size: 1.35rem;
+}
+
+.mdx-body p {
+  margin-bottom: 1em;
+  color: rgba(248, 250, 252, 0.92);
+}
+
+.mdx-body ul,
+.mdx-body ol {
+  margin: 0.75em 0 1em 1.5em;
+  padding: 0;
+  color: rgba(248, 250, 252, 0.92);
+}
+
+.mdx-body li {
+  margin-bottom: 0.35em;
+}
+
+.mdx-body code {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0.55rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.95em;
+}
+
+.mdx-body pre {
+  margin: 1.2em 0;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #0a0f1d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: auto;
+}
+
+.mdx-body blockquote {
+  margin: 1.2em 0;
+  padding: 0.8em 1em;
+  border-left: 4px solid rgba(245, 158, 11, 0.6);
+  background: rgba(245, 158, 11, 0.08);
+  color: rgba(248, 250, 252, 0.9);
+}
+
+.mdx-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.mdx-body th,
+.mdx-body td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.6em 0.8em;
+  text-align: left;
+}
+
+.mdx-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.mdx-body a:hover {
+  text-decoration: underline;
 }

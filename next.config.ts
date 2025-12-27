@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  turbopack: {
+    // Evita la advertencia de raíz cuando hay lockfiles fuera del proyecto.
+    root: __dirname,
+  },
 };
 
 export default nextConfig;
