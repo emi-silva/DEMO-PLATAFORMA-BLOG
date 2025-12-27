@@ -65,9 +65,17 @@ La página `/editor` permite redactar con MDX y ver una previsualización en viv
 - `npx prisma db seed`: siembra datos de ejemplo.
 
 ### Notas de despliegue
-- Asegura `DATABASE_URL` en producción.
-- Ejecuta `prisma generate` en CI/CD antes del build.
+- Asegura `DATABASE_URL` en producción si usarás PostgreSQL (Neon, Supabase o RDS).
+- En Vercel, el build usa `npm run build` que ya ejecuta `prisma generate`.
+- Si no defines `DATABASE_URL`, el sitio despliega en modo demo (contenido en memoria).
 - Revisa cachés de datos con `revalidate` por segmento en App Router.
+
+### Deploy en Vercel
+1. Sube el repo y crea un proyecto en Vercel.
+2. Configura variables de entorno (opcional): `DATABASE_URL`.
+3. Asegura Node `>=18` (Vercel ya usa 18/20 por defecto).
+4. Deploy: Vercel ejecutará `npm install` y `npm run build` (se genera Prisma y compila Next).
+5. Si usas DB gestionada, habilita pool de conexiones (p.ej. Neon/Supabase) para funciones serverless.
 
 ### Personalización
 - Conecta autenticación en `src/lib/auth.ts`.
