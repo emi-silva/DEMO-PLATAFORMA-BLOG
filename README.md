@@ -1,61 +1,75 @@
-## Blog Platform (Next.js + MDX + Prisma)
+## Plataforma de Blog (Next.js + MDX + Prisma)
 
-Plataforma de blogs moderna con editor MDX en vivo, API CRUD, Prisma y PostgreSQL.
+Este proyecto implementa un blog moderno con Next.js (App Router), editor MDX con vista previa, API CRUD y persistencia opcional en PostgreSQL mediante Prisma. Está listo para funcionar en modo demo sin base de datos, y con pocos pasos puedes conectarlo a tu propia instancia.
 
-### Stack
-- Next.js 16 (App Router) + Tailwind 4
-- MDX render y previsualización (remark/rehype + `@mdx-js/mdx`)
-- Prisma ORM + PostgreSQL
-- API routes para posts y etiquetas
-- Pruebas unitarias con Vitest
+### Tecnologías
+- Next.js 16 (App Router) y Turbopack.
+- MDX (render y preview con remark/rehype).
+- Prisma ORM + PostgreSQL (opcional).
+- Estilos con Tailwind (clases utilitarias incluidas).
+- Pruebas unitarias con Vitest.
 
-### Configuración rápida
-1) Instala dependencias
+### Estructura principal
+- `src/app/page.tsx`: portada y listado de posts.
+- `src/app/posts/[slug]/page.tsx`: detalle de un post, render MDX.
+- `src/app/editor/page.tsx`: editor con formulario + vista previa.
+- `src/app/api/posts/route.ts`: API para listar/crear.
+- `src/app/api/posts/[slug]/route.ts`: API para leer/actualizar/eliminar.
+- `src/lib/posts.ts`: acceso a datos y fallback sin DB.
+- `prisma/schema.prisma`: modelos `Post` y `Tag`.
+- `prisma/seed.ts`: datos semilla técnicos (MDX, Next.js, Prisma, testing).
+
+### Modo demo (sin base de datos)
+Si tu `.env` no define `DATABASE_URL`, el backend usa contenido en memoria para que todo funcione sin PostgreSQL. Esto habilita el feed, el detalle y la API `GET` con posts de ejemplo. Las mutaciones (`POST`, `PUT`, `DELETE`) requieren DB y devolverán error si no hay conexión configurada.
+
+### Configuración con PostgreSQL (opcional)
+1. Instala dependencias:
 ```bash
 npm install
 ```
-
-2) Crea tu `.env` a partir del ejemplo y ajusta la URL de base de datos
+2. Copia el archivo de ejemplo y ajusta tu conexión:
 ```bash
 cp .env.example .env
 # DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/blog_platform?schema=public"
 ```
-
-3) Genera Prisma Client y aplica el esquema a tu base
+3. Genera cliente y aplica el esquema:
 ```bash
-npm run prisma:generate
-npm run prisma:migrate -- --name init   # o usa npm run db:push para entornos locales rápidos
+npx prisma generate
+npx prisma migrate dev --name init
+```
+4. Carga datos de ejemplo:
+```bash
+npx prisma db seed
 ```
 
-4) Carga datos de demo (posts MDX + etiquetas)
-```bash
-npm run prisma:seed
-```
-
-5) Arranca el servidor de desarrollo
+### Ejecutar en desarrollo
 ```bash
 npm run dev
-# abre http://localhost:3000
+# Abre http://localhost:3000
 ```
 
-### Flujos clave
-- `GET /api/posts?tag=mdx&includeDrafts=true` — listar posts (opcionalmente por tag o incluyendo borradores).
-- `POST /api/posts` — crear (payload: `title`, `content`, `tags`, `excerpt?`, `slug?`, `published?`).
-- `GET /api/posts/:slug` — detalle.
-- `PUT /api/posts/:slug` — actualizar.
-- `DELETE /api/posts/:slug` — eliminar.
+### Endpoints
+- `GET /api/posts?tag=mdx&includeDrafts=true`: lista posts (filtro por etiqueta y borradores opcional).
+- `POST /api/posts`: crea post (campos: `title`, `content`, `tags`, `excerpt?`, `slug?`, `published?`).
+- `GET /api/posts/:slug`: obtiene un post.
+- `PUT /api/posts/:slug`: actualiza un post.
+- `DELETE /api/posts/:slug`: elimina un post.
 
 ### Editor MDX
-- Página `/editor` incluye formulario con vista previa en vivo.
-- Guarda usando el endpoint `/api/posts` y persiste en PostgreSQL.
+La página `/editor` permite redactar con MDX y ver una previsualización en vivo. El formulario envía el payload al endpoint `/api/posts`. En modo demo verás la preview y el flujo, y con DB activa se guardará en PostgreSQL.
 
 ### Scripts útiles
-- `npm run lint` — ESLint.
-- `npm run test` — Vitest (ej. utilidades).
-- `npm run prisma:migrate` — crear migración (requiere base de datos disponible).
-- `npm run prisma:seed` — datos de ejemplo.
+- `npm run lint`: ejecuta ESLint.
+- `npm run test`: corre Vitest.
+- `npx prisma migrate dev`: crea/aplica migraciones.
+- `npx prisma db seed`: siembra datos de ejemplo.
 
-### Siguientes pasos
-- Conecta tu proveedor de autenticación en `src/lib/auth.ts` (placeholders listos).
-- Añade políticas de autorización en las rutas de API.
-- Personaliza estilos/temas según tu marca.
+### Notas de despliegue
+- Asegura `DATABASE_URL` en producción.
+- Ejecuta `prisma generate` en CI/CD antes del build.
+- Revisa cachés de datos con `revalidate` por segmento en App Router.
+
+### Personalización
+- Conecta autenticación en `src/lib/auth.ts`.
+- Ajusta estilos en `src/app/globals.css`.
+- Extiende componentes MDX en `src/components/`.
